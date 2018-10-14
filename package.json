@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/euler16/Qu.js#readme",
   "dependencies": {
+    "browserify": "^16.2.3",
     "mathjs": "^5.2.0"
   }
 }
