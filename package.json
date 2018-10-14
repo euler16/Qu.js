@@ -1,0 +1,26 @@
+{
+  "name": "qujs",
+  "version": "1.0.0",
+  "description": "Quantum Computing for Humans!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/euler16/Qu.js.git"
+  },
+  "keywords": [
+    "quantum-computing",
+    "quantum-programming"
+  ],
+  "author": "Nilay Shrivastava",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/euler16/Qu.js/issues"
+  },
+  "homepage": "https://github.com/euler16/Qu.js#readme",
+  "dependencies": {
+    "mathjs": "^5.2.0"
+  }
+}
