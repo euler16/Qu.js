@@ -1,5 +1,7 @@
 import * as math from 'mathjs';
 import * as Qasm from '../qasm_files/QASMImport.js';
+//import * as Gates from './gates';
+
 
 function randomStr(length:number=17):string {
     let text: string = "";
@@ -7,7 +9,7 @@ function randomStr(length:number=17):string {
     text += charset.charAt(Math.floor(Math.random() * charset.length));
     charset += "0123456789";
 
-    for (let i = 0; i < len; i++) {
+    for (let i = 0; i < length; i++) {
         text += charset.charAt(Math.floor(Math.random() * charset.length));
     }
 
@@ -963,13 +965,13 @@ class QuantumCircuit {
     };
 
     public numQubits: number;
-    public params:object;
-    public customGates:object;
-    public cregs:object;
-    public collapsed:number[];
+    public params: object;
+    public customGates: object;
+    public cregs: any;
+    public collapsed: number[];
     public prob: number[];
-    public gates: number[][];
-    public state:object;
+    public gates: object[][];
+    public state: any;
     public stateBits: number;
     public stats:object;
 
@@ -1068,7 +1070,7 @@ class QuantumCircuit {
         return true;
     };
 
-    lastNonEmptyPlace(wires, usingCregs) {
+    lastNonEmptyPlace(wires: number[], usingCregs: boolean): number {
         let col: number = this.numCols();
         let allEmpty: boolean = true;
 
@@ -1093,13 +1095,14 @@ class QuantumCircuit {
         return col;
     };
 
-    addGate(gateName, column:number, wires, options) {
+    addGate(gateName: string, column:number, wires: number[], options: any):void {
         let wireList = [];
         if (Array.isArray(wires)) {
             for (let i = 0; i < wires.length; i++) {
                 wireList.push(wires[i]);
             }
         } else {
+            // if its a single number
             wireList.push(wires);
         }
 
@@ -1108,7 +1111,7 @@ class QuantumCircuit {
         }
 
         let numConnectors:number = wireList.length;
-        let id:string = randomString();
+        let id:string = randomStr();
         for (let connector = 0; connector < numConnectors; connector++) {
             let wire = wireList[connector];
 
@@ -1152,7 +1155,7 @@ class QuantumCircuit {
         }
     };
 
-    removeGate(column, wire) {
+    removeGate(column: number, wire: number): void {
         if (!this.gates[wire]) {
             return;
         }
@@ -1289,7 +1292,7 @@ class QuantumCircuit {
         this.stateBits = newStateBits;
     };
 
-    applyGate(gateName, wires, options): void {
+    applyGate(gateName:string, wires: number[], options): void {
         if (gateName == "measure") {
             if (!options.creg) {
                 throw "Error: \"measure\" gate requires destination.";
@@ -1316,13 +1319,13 @@ class QuantumCircuit {
     getRawGate(gate, options) {
         let rawGate = [];
         gate.matrix.map(function (row) {
-            let rawGateRow = [];
-            row.map(function (item) {
+            let rawGateRow:any = [];
+            row.map(function (item:any): void {
                 if (typeof item == "string") {
                     let params = options ? options.params || {} : {};
 
-                    let vars = {};
-                    gate.params.map(function (varName, varIndex) {
+                    let vars: any = {};
+                    gate.params.map(function (varName: string, varIndex: number) {
                         if (Array.isArray(params)) {
                             // Deprecated. For backward compatibility only. "params" should be object - not array.
                             vars[varName] = params.length > varIndex ? math.eval(params[varIndex]) : null;
@@ -2426,7 +2429,7 @@ class QuantumCircuit {
         return quil; 
     };
 
-    exportSVG(embedded) {
+    exportSVG(embedded:boolean):string {
         let self = this;
         let cellWidth: number = 40;
         let cellHeight: number = 40;
