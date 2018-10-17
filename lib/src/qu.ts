@@ -975,7 +975,12 @@ class QuantumCircuit {
     public stateBits: number;
     public stats:object;
 
-
+    /**
+     * 
+     
+    *@param {number} numQubits - number of qubits in your circuit
+    *
+    */
     constructor(numQubits: number = 1) {
 
         this.numQubits = numQubits;
