@@ -964,18 +964,23 @@ class QuantumCircuit {
         },
     };
 
-    public numQubits: number;
-    public params: object;
+    public numQubits: number; // number of Qubits in the circuit
+    public params: object; // TODO
     public customGates: object;
-    public cregs: any;
+    public cregs: any; // maybe Classical Registers
     public collapsed: number[];
     public prob: number[];
-    public gates: object[][];
+    public gates: object[][]; // NECESSARY
     public state: any;
     public stateBits: number;
     public stats:object;
 
-
+    /**
+     * 
+     
+    *@param {number} numQubits - number of qubits in your circuit
+    *
+    */
     constructor(numQubits: number = 1) {
 
         this.numQubits = numQubits;
@@ -988,7 +993,7 @@ class QuantumCircuit {
         this.clear();
     }
 
-    clear() {
+    clear(): void {
         for (let i = 0; i < this.numQubits; i++) {
             this.gates.push([]);
         }
@@ -1253,8 +1258,8 @@ class QuantumCircuit {
         //
         // current state is multiplied and stored into newState
         let newState = {};
-        let newStateBits = 0;
-        let incCount = (1 << unusedCount);
+        let newStateBits: number = 0;
+        let incCount: number = (1 << unusedCount);
         while (incCount--) {
             let row: number = 0;
 
@@ -1345,7 +1350,7 @@ class QuantumCircuit {
         return rawGate;
     };
 
-    decompose(obj:object): object {
+    decompose(obj:any) {
         if (!obj.gates.length) {
             return obj;
         }
@@ -1432,7 +1437,7 @@ class QuantumCircuit {
         return used;
     };
     // getter
-    getGateDef(name) {
+    getGateDef(name: string) {
         let gateDef = this.basicGates[name];
         if (!gateDef) {
             gateDef = this.customGates[name];
@@ -1467,7 +1472,7 @@ class QuantumCircuit {
         this.customGates[name] = obj;
     };
 
-    getGateAt(column, wire) {
+    getGateAt(column: number, wire: number) {
         if (!this.gates[wire] || !this.gates[wire][column]) {
             return null;
         }
@@ -1479,7 +1484,8 @@ class QuantumCircuit {
         gate.wires = [];
 
         let id = gate.id;
-        let numWires = this.gates.length;
+        let numWires: number = this.gates.length;
+
         for (let wire = 0; wire < numWires; wire++) {
             let g = this.gates[wire][column];
             if (g && g.id == id) {
