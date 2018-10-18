@@ -1180,7 +1180,7 @@ class QuantumCircuit {
         }
     };
 
-    addMeasure(wire, creg, cbit):void {
+    addMeasure(wire:number, creg:string, cbit):void {
         this.addGate("measure", -1, wire, { creg: { name: creg, bit: cbit } });
     };
 
@@ -1460,7 +1460,7 @@ class QuantumCircuit {
         }
     };
 
-    load(obj:object) {
+    load(obj:any) {
         this.numQubits = obj.numQubits || 1;
         this.clear();
         this.params = JSON.parse(JSON.stringify(obj.params || []));
@@ -1468,7 +1468,7 @@ class QuantumCircuit {
         this.customGates = JSON.parse(JSON.stringify(obj.customGates || {}));
     };
 
-    registerGate(name, obj) {
+    registerGate(name: string, obj: any): void {
         this.customGates[name] = obj;
     };
 
