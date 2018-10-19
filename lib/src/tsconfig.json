@@ -10,6 +10,9 @@
         "declaration": true
     },
     "files": [
-        "qu.ts"
+        "BasicGates.ts",
+        "Gates.ts",
+        "Helper.ts",
+        "Qu.ts",
     ]
 }
