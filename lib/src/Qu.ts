@@ -164,6 +164,7 @@ class QuantumCircuit {
         }
 
         if (column < 0) {
+            // had to add condition to Options interface
             column = this.lastNonEmptyPlace(wireList, gateName == "measure" || (options && options.condition && options.condition.creg)) + 1;
         }
 
@@ -238,7 +239,7 @@ class QuantumCircuit {
         this.addGate("measure", -1, wire, { creg: { name: creg, bit: cbit } });
     };
 
-    applyTransform(U, qubits) {
+    applyTransform(U, qubits: number[]) {
         // clone list of wires to itself (remove reference to original array)
         qubits = qubits.slice(0);
 
@@ -351,7 +352,7 @@ class QuantumCircuit {
         this.stateBits = newStateBits;
     };
 
-    applyGate(gateName:string, wires: number[], options: any): void {
+    applyGate(gateName:string, wires: number[], options: Options): void {
         if (gateName == "measure") {
             if (!options.creg) {
                 throw "Error: \"measure\" gate requires destination.";
@@ -359,8 +360,8 @@ class QuantumCircuit {
             this.measure(wires[0], options.creg.name, options.creg.bit);
             return;
         }
-
-        let gate = this.basicGates[gateName];
+        // gate interface needs to change -- also don't know if it is the same gate
+        let gate: any = BasicGates[gateName]; // have declared it a constant
         if (!gate) {
             console.log("Unknown gate \"" + gateName + "\".");
             return;
