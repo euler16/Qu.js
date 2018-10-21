@@ -5,6 +5,7 @@ export interface cReg {
 };
 export interface Options {
     creg?: cReg;
+    condition?:any;
 };
 export interface Gate {
     id: string;
