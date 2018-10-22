@@ -254,6 +254,12 @@ class QuantumCircuit {
     addMeasure(wire:number, creg:string, cbit: number):void {
         this.addGate("measure", -1, wire, { creg: { name: creg, bit: cbit } });
     };
+    
+    /**
+     * 
+     * @param U 
+     * @param qubits {number[]}
+     */
 
     applyTransform(U, qubits: number[]) {
         // clone list of wires to itself (remove reference to original array)
@@ -368,6 +374,13 @@ class QuantumCircuit {
         this.stateBits = newStateBits;
     };
 
+    /**
+     * 
+     * @param gateName 
+     * @param wires 
+     * @param options 
+     */
+
     applyGate(gateName:string, wires: number[], options: Options): void {
         if (gateName == "measure") {
             if (!options.creg) {
@@ -391,6 +404,12 @@ class QuantumCircuit {
 
         this.applyTransform(rawGate, wires);
     };
+
+    /**
+     * 
+     * @param gate 
+     * @param options 
+     */
 
     getRawGate(gate, options) {
         let rawGate = [];
@@ -420,6 +439,11 @@ class QuantumCircuit {
         });
         return rawGate;
     };
+
+    /**
+     * 
+     * @param obj 
+     */
 
     decompose(obj:any) {
         if (!obj.gates.length) {
@@ -516,6 +540,10 @@ class QuantumCircuit {
         return gateDef;
     };
 
+    /**
+     * 
+     * @param decompose 
+     */
     save(decompose:boolean):object {
         let data: object = {
             numQubits: this.numQubits,
@@ -530,6 +558,9 @@ class QuantumCircuit {
             return data;
         }
     };
+    /**
+     * @param obj
+     */
 
     load(obj:any) {
         this.numQubits = obj.numQubits || 1;
