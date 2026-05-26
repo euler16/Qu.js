@@ -4,6 +4,10 @@ import { randomStr, formatComplex, zeroes, identityMatrix, makeControlled } from
 import { Gate, Options, cReg } from './Gates';
 import { BasicGates } from './BasicGates';
 
+function evaluateExpression(expression: any, scope?: any): any {
+    let evaluate = (math as any).evaluate || (math as any).eval;
+    return scope ? evaluate(expression, scope) : evaluate(expression);
+}
 
 class QuantumCircuit {
     /**
@@ -438,13 +442,13 @@ class QuantumCircuit {
                     gate.params.map(function (varName: string, varIndex: number) {
                         if (Array.isArray(params)) {
                             // Deprecated. For backward compatibility only. "params" should be object - not array.
-                            vars[varName] = params.length > varIndex ? math.eval(params[varIndex]) : null;
+                            vars[varName] = params.length > varIndex ? evaluateExpression(params[varIndex]) : null;
                         } else {
-                            vars[varName] = math.eval(params[varName]);
+                            vars[varName] = evaluateExpression(params[varName]);
                         }
                     });
 
-                    let ev = math.eval(item, vars);
+                    let ev = evaluateExpression(item, vars);
                     rawGateRow.push(ev);
                 } else {
                     rawGateRow.push(item);

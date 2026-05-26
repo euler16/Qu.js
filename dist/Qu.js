@@ -3,6 +3,10 @@ var math = require("mathjs");
 var Qasm = require("../lib/qasm_files/QASMImport.js");
 var Helper_1 = require("./Helper");
 var BasicGates_1 = require("./BasicGates");
+function evaluateExpression(expression, scope) {
+    var evaluate = math.evaluate || math.eval;
+    return scope ? evaluate(expression, scope) : evaluate(expression);
+}
 var QuantumCircuit = (function () {
     function QuantumCircuit(numQubits) {
         if (numQubits === void 0) { numQubits = 1; }
@@ -316,13 +320,13 @@ var QuantumCircuit = (function () {
                     var vars_1 = {};
                     gate.params.map(function (varName, varIndex) {
                         if (Array.isArray(params_1)) {
-                            vars_1[varName] = params_1.length > varIndex ? math.eval(params_1[varIndex]) : null;
+                            vars_1[varName] = params_1.length > varIndex ? evaluateExpression(params_1[varIndex]) : null;
                         }
                         else {
-                            vars_1[varName] = math.eval(params_1[varName]);
+                            vars_1[varName] = evaluateExpression(params_1[varName]);
                         }
                     });
-                    var ev = math.eval(item, vars_1);
+                    var ev = evaluateExpression(item, vars_1);
                     rawGateRow.push(ev);
                 }
                 else {
