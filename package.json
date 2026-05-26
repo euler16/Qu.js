@@ -2,9 +2,10 @@
   "name": "qujs",
   "version": "1.0.0",
   "description": "Quantum Computing for Humans!",
-  "main": "index.js",
+  "main": "dist/Qu.js",
+  "types": "dist/Qu.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test/smoke.js && node test/simulations.js"
   },
   "repository": {
     "type": "git",

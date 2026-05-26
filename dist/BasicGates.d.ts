@@ -1,1 +1,1 @@
-export declare const BasicGates: object;
+export declare const BasicGates: any;

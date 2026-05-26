@@ -1,5 +1,6 @@
 "use strict";
 exports.__esModule = true;
+exports.BasicGates = void 0;
 exports.BasicGates = {
     id: {
         description: "Single qubit identity gate",

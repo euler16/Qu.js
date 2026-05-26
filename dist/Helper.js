@@ -1,5 +1,6 @@
 "use strict";
 exports.__esModule = true;
+exports.makeControlled = exports.identityMatrix = exports.zeroes = exports.formatComplex = exports.formatComplex2 = exports.randomStr = void 0;
 var math = require("mathjs");
 function randomStr(length) {
     if (length === void 0) { length = 17; }

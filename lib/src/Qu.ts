@@ -11,6 +11,7 @@ class QuantumCircuit {
      */
 
     static basicGates:object = BasicGates;
+    public basicGates:object;
     public numQubits: number; // number of Qubits in the circuit
     public params: object; // TODO
     public customGates: object;
@@ -30,6 +31,7 @@ class QuantumCircuit {
     */
     constructor(numQubits: number = 1) {
 
+        this.basicGates = BasicGates;
         this.numQubits = numQubits;
         this.params = [];
         this.customGates = {};
@@ -40,7 +42,20 @@ class QuantumCircuit {
         this.clear();
     }
 
+    init(numQubits: number = 1): void {
+        this.basicGates = BasicGates;
+        this.numQubits = numQubits;
+        this.params = [];
+        this.customGates = {};
+        this.cregs = {};
+        this.collapsed = [];
+        this.prob = [];
+        this.gates = [];
+        this.clear();
+    };
+
     clear(): void {
+        this.gates = [];
         for (let i = 0; i < this.numQubits; i++) {
             this.gates.push([]);
         }
@@ -163,7 +178,7 @@ class QuantumCircuit {
      * @param options 
      */
     addGate(gateName: string, column:number, wires: number|number[], 
-            options: Options):void {
+            options?: Options):void {
 
         let wireList = [];
         if (Array.isArray(wires)) {
@@ -243,9 +258,9 @@ class QuantumCircuit {
     
         let id = gate.id;
 
-        let numWires = this.gates[0].length;
+        let numWires = this.gates.length;
         for (let wire = 0; wire < numWires; wire++) {
-            if (this.gates[wire][column].id == id) {
+            if (this.gates[wire] && this.gates[wire][column] && this.gates[wire][column].id == id) {
                 this.gates[wire][column] = null;
             }
         }
@@ -381,7 +396,7 @@ class QuantumCircuit {
      * @param options 
      */
 
-    applyGate(gateName:string, wires: number[], options: Options): void {
+    applyGate(gateName:string, wires: number[], options?: Options): void {
         if (gateName == "measure") {
             if (!options.creg) {
                 throw "Error: \"measure\" gate requires destination.";
@@ -549,7 +564,8 @@ class QuantumCircuit {
             numQubits: this.numQubits,
             params: JSON.parse(JSON.stringify(this.params)),
             gates: JSON.parse(JSON.stringify(this.gates)),
-            customGates: JSON.parse(JSON.stringify(this.customGates))
+            customGates: JSON.parse(JSON.stringify(this.customGates)),
+            cregs: JSON.parse(JSON.stringify(this.cregs))
         }
 
         if (decompose) {
@@ -568,6 +584,7 @@ class QuantumCircuit {
         this.params = JSON.parse(JSON.stringify(obj.params || []));
         this.gates = JSON.parse(JSON.stringify(obj.gates || []));
         this.customGates = JSON.parse(JSON.stringify(obj.customGates || {}));
+        this.cregs = JSON.parse(JSON.stringify(obj.cregs || {}));
     };
 
     registerGate(name: string, obj: any): void {
@@ -680,6 +697,9 @@ class QuantumCircuit {
                             if (paramCount) {
                                 qasm += " (";
                                 for (let p = 0; p < paramCount; p++) {
+                                    if (p > 0) {
+                                        qasm += ",";
+                                    }
                                     let paramName = paramDef[p];
                                     qasm += gate.options.params[paramName];
                                 }

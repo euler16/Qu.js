@@ -1,7 +1,8 @@
 import * as math from 'mathjs';
-import { Gate } from './Gates';
+import { Gate, Options } from './Gates';
 declare class QuantumCircuit {
     static basicGates: object;
+    basicGates: object;
     numQubits: number;
     params: object;
     customGates: object;
@@ -13,6 +14,7 @@ declare class QuantumCircuit {
     stateBits: number;
     stats: object;
     constructor(numQubits?: number);
+    init(numQubits?: number): void;
     clear(): void;
     resetState(): void;
     initState(): void;
@@ -21,14 +23,14 @@ declare class QuantumCircuit {
     numGates(decompose: boolean): number;
     isEmptyCell(col: number, wire: number): boolean;
     lastNonEmptyPlace(wires: number[], usingCregs: boolean): number;
-    addGate(gateName: string, column: number, wires: number | number[], options: any): void;
+    addGate(gateName: string, column: number, wires: number | number[], options?: Options): void;
     removeGate(column: number, wire: number): void;
-    addMeasure(wire: number, creg: string, cbit: any): void;
-    applyTransform(U: any, qubits: any): void;
-    applyGate(gateName: string, wires: number[], options: any): void;
+    addMeasure(wire: number, creg: string, cbit: number): void;
+    applyTransform(U: any, qubits: number[]): void;
+    applyGate(gateName: string, wires: number[], options?: Options): void;
     getRawGate(gate: any, options: any): any[];
     decompose(obj: any): any;
-    usedGates(): string[];
+    usedGates(): any[];
     getGateDef(name: string): any;
     save(decompose: boolean): object;
     load(obj: any): void;

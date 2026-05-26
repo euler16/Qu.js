@@ -1,11 +1,12 @@
 "use strict";
 var math = require("mathjs");
-var Qasm = require("../qasm_files/QASMImport.js");
+var Qasm = require("../lib/qasm_files/QASMImport.js");
 var Helper_1 = require("./Helper");
 var BasicGates_1 = require("./BasicGates");
 var QuantumCircuit = (function () {
     function QuantumCircuit(numQubits) {
         if (numQubits === void 0) { numQubits = 1; }
+        this.basicGates = BasicGates_1.BasicGates;
         this.numQubits = numQubits;
         this.params = [];
         this.customGates = {};
@@ -15,7 +16,21 @@ var QuantumCircuit = (function () {
         this.gates = [];
         this.clear();
     }
+    QuantumCircuit.prototype.init = function (numQubits) {
+        if (numQubits === void 0) { numQubits = 1; }
+        this.basicGates = BasicGates_1.BasicGates;
+        this.numQubits = numQubits;
+        this.params = [];
+        this.customGates = {};
+        this.cregs = {};
+        this.collapsed = [];
+        this.prob = [];
+        this.gates = [];
+        this.clear();
+    };
+    ;
     QuantumCircuit.prototype.clear = function () {
+        this.gates = [];
         for (var i = 0; i < this.numQubits; i++) {
             this.gates.push([]);
         }
@@ -80,7 +95,10 @@ var QuantumCircuit = (function () {
         for (var w = 0; w < this.numQubits; w++) {
             var gate = this.getGateAt(col, w);
             if (gate) {
-                if (gate.name == "measure" || (gate.options && gate.options.condition && gate.options.condition.creg) || (Math.min.apply(null, gate.wires) < wire && Math.max.apply(null, gate.wires) > wire)) {
+                if (gate.name == "measure" || (gate.options &&
+                    gate.options.condition && gate.options.condition.creg) ||
+                    (Math.min.apply(null, gate.wires) < wire &&
+                        Math.max.apply(null, gate.wires) > wire)) {
                     return false;
                 }
             }
@@ -168,9 +186,9 @@ var QuantumCircuit = (function () {
             return;
         }
         var id = gate.id;
-        var numWires = this.gates[0].length;
+        var numWires = this.gates.length;
         for (var wire_1 = 0; wire_1 < numWires; wire_1++) {
-            if (this.gates[wire_1][column].id == id) {
+            if (this.gates[wire_1] && this.gates[wire_1][column] && this.gates[wire_1][column].id == id) {
                 this.gates[wire_1][column] = null;
             }
         }
@@ -277,7 +295,7 @@ var QuantumCircuit = (function () {
             this.measure(wires[0], options.creg.name, options.creg.bit);
             return;
         }
-        var gate = this.basicGates[gateName];
+        var gate = BasicGates_1.BasicGates[gateName];
         if (!gate) {
             console.log("Unknown gate \"" + gateName + "\".");
             return;
@@ -411,7 +429,8 @@ var QuantumCircuit = (function () {
             numQubits: this.numQubits,
             params: JSON.parse(JSON.stringify(this.params)),
             gates: JSON.parse(JSON.stringify(this.gates)),
-            customGates: JSON.parse(JSON.stringify(this.customGates))
+            customGates: JSON.parse(JSON.stringify(this.customGates)),
+            cregs: JSON.parse(JSON.stringify(this.cregs))
         };
         if (decompose) {
             return this.decompose(data);
@@ -427,6 +446,7 @@ var QuantumCircuit = (function () {
         this.params = JSON.parse(JSON.stringify(obj.params || []));
         this.gates = JSON.parse(JSON.stringify(obj.gates || []));
         this.customGates = JSON.parse(JSON.stringify(obj.customGates || {}));
+        this.cregs = JSON.parse(JSON.stringify(obj.cregs || {}));
     };
     ;
     QuantumCircuit.prototype.registerGate = function (name, obj) {
@@ -525,6 +545,9 @@ var QuantumCircuit = (function () {
                             if (paramCount) {
                                 qasm += " (";
                                 for (var p = 0; p < paramCount; p++) {
+                                    if (p > 0) {
+                                        qasm += ",";
+                                    }
                                     var paramName = paramDef[p];
                                     qasm += gate.options.params[paramName];
                                 }
