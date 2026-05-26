@@ -24,3 +24,7 @@ Currently Qu.js provides (or aims to provide) the following functionalities:
 - [ ] QASM to Quil
 - [ ] A Twitter based interface (working on it :) )
 - [ ] Support [Cirq](https://ai.googleblog.com/2018/07/announcing-cirq-open-source-framework.html) backend (another Quantum Computing Library)
+
+## License
+
+Qu.js is licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE).

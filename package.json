@@ -16,7 +16,7 @@
     "quantum-programming"
   ],
   "author": "Nilay Shrivastava",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/euler16/Qu.js/issues"
   },
